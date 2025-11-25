@@ -97,16 +97,15 @@
         });
 
         // 1. Blank Black Screen (Initial state)
-        // 2. Spark Appears
-        tl.to(spark, { opacity: 1, duration: 0.5, ease: "power2.out" })
-            .to(spark, { scale: 1.5, duration: 0.2, yoyo: true, repeat: 1 })
+        // 2. Spark Appears & Immediately Expands
+        tl.to(spark, { opacity: 1, duration: 0.1, ease: "power2.out" })
 
             // 3. Spark "Uncoils" (Simulated by expanding scale)
             // AND Overlay Background fades to transparent to reveal the Green Page
             .to(
                 spark,
                 { scale: 300, opacity: 0, duration: 1.2, ease: "power4.in" },
-                "+=0.1",
+                ">", // Start immediately after spark appears
             )
             .to(
                 overlay,
