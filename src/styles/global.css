@@ -71,7 +71,7 @@ em {
 section {
   width: 100%;
   scroll-margin-top: 80px;
-  scroll-snap-align: start;
+  /* scroll-snap-align: start; - Moved to media query for desktop only */
   display: block;
   flex-direction: column;
   justify-content: center;
@@ -81,6 +81,12 @@ section {
   border-radius: 1rem;
   overflow: hidden;
   box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  section {
+    scroll-snap-align: start;
+  }
 }
 
 .section-container {
@@ -798,10 +804,12 @@ details h4 {
   font-size: 1.25rem;
   font-weight: 600;
   border-radius: 9999px;
+
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   text-decoration: none;
   display: inline-block;
-  transition: background-color 0.3s, transform 0.3s;
+  transition: background-color 0.3s,
+    transform 0.3s;
 }
 
 .cta-button:hover {
@@ -1106,4 +1114,19 @@ h2 {
   margin-bottom: 0.75rem;
   font-size: 1.125rem;
   text-align: left;
+}
+
+/*----------------------------------------
+  Mobile Optimizations
+----------------------------------------*/
+@media (max-width: 768px) {
+
+  /* Disable fixed backgrounds on mobile to prevent jitter */
+  #what-we-do,
+  #services,
+  #garage,
+  #story,
+  #contact {
+    background-attachment: scroll;
+  }
 }
