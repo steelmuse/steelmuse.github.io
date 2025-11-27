@@ -102,14 +102,25 @@
 
     /* Responsive Behavior */
     @media (max-width: 768px) {
+        .telemetry-container {
+            margin-top: 2rem;
+            padding: 0 15px;
+        }
+
         .telemetry-grid {
             flex-direction: column;
             align-items: center;
+            gap: 15px;
         }
 
         .telemetry-item {
             width: 100%;
-            max-width: 400px; /* Limit width on mobile */
+            max-width: 100%; /* Allow full width */
+            padding: 20px 15px; /* Reduced padding */
+        }
+
+        .metric {
+            font-size: 36px; /* Smaller metric on mobile */
         }
     }
 </style>

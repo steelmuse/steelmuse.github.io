@@ -85,7 +85,7 @@ section {
 
 @media (min-width: 768px) {
   section {
-    scroll-snap-align: start;
+    /* scroll-snap-align removed to fix jumping issue */
   }
 }
 
@@ -207,6 +207,14 @@ h4 {
 }
 
 @media (max-width: 768px) {
+  #home {
+    height: auto;
+    min-height: 100dvh;
+    justify-content: flex-start;
+    padding-top: 140px;
+    padding-bottom: 60px;
+  }
+
   #tagline {
     font-size: 2rem;
   }
@@ -1246,15 +1254,18 @@ h2 {
   text-transform: uppercase;
   letter-spacing: 1px;
   flex: 1;
-  cursor: pointer;
-  transition: all 0.2s;
+  cursor: default;
+  /* Changed from pointer */
+  opacity: 0.8;
+  /* Slight opacity to indicate placeholder */
 }
 
-.btn-method:hover {
+/* Hover effect removed for placeholder status */
+/* .btn-method:hover {
   background: rgba(255, 255, 255, 0.1);
   color: var(--clr-light);
   border-color: var(--clr-light);
-}
+} */
 
 .btn-agent {
   background: var(--clr-light);
@@ -1265,14 +1276,17 @@ h2 {
   text-transform: uppercase;
   letter-spacing: 1px;
   flex: 1;
-  cursor: pointer;
+  cursor: default;
+  /* Changed from pointer */
   font-weight: 700;
-  transition: all 0.2s;
+  opacity: 0.8;
+  /* Slight opacity to indicate placeholder */
 }
 
-.btn-agent:hover {
+/* Hover effect removed for placeholder status */
+/* .btn-agent:hover {
   background: #E0E0E0;
-}
+} */
 
 /*----------------------------------------
   Story Section Styles
