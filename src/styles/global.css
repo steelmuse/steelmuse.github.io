@@ -1130,3 +1130,393 @@ h2 {
     background-attachment: scroll;
   }
 }
+
+/*----------------------------------------
+  Garage Section Styles
+----------------------------------------*/
+
+.garage-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.garage-header {
+  max-width: 800px;
+  margin: 0 auto 30px auto;
+  /* Reduced from 60px */
+  border-bottom: 1px solid #E0E0E0;
+  padding-bottom: 40px;
+}
+
+.zone-container {
+  margin-bottom: 50px;
+}
+
+.zone-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #5F6D7B;
+  margin-bottom: 20px;
+  border-left: 3px solid var(--clr-primary);
+  padding-left: 10px;
+  text-align: left;
+}
+
+.garage-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+/* Card Container */
+.garage-card {
+  background-color: var(--clr-primary);
+  color: var(--clr-light);
+  border: 1px solid #5F6D7B;
+  padding: 30px;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+/* Hover Effect */
+.garage-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(47, 94, 57, 0.4);
+  border-color: #99AA99;
+}
+
+/* Header Layout */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--clr-light);
+  text-align: left;
+}
+
+/* Status Badge */
+.status-badge {
+  font-size: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--clr-light);
+  padding: 4px 8px;
+  border-radius: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+/* Body Text */
+.card-body {
+  font-size: 14px;
+  color: #E0E0E0;
+  line-height: 1.5;
+  margin-bottom: 30px;
+  flex-grow: 1;
+  text-align: left;
+}
+
+/* Buttons */
+.card-footer {
+  display: flex;
+  gap: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding-top: 20px;
+  min-height: 20px;
+}
+
+.btn-method {
+  background: none;
+  border: 1px solid #AABBAA;
+  color: #E0E0E0;
+  padding: 10px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  flex: 1;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-method:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--clr-light);
+  border-color: var(--clr-light);
+}
+
+.btn-agent {
+  background: var(--clr-light);
+  border: none;
+  color: var(--clr-primary);
+  padding: 10px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  flex: 1;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.2s;
+}
+
+.btn-agent:hover {
+  background: #E0E0E0;
+}
+
+/*----------------------------------------
+  Story Section Styles
+----------------------------------------*/
+#story {
+  background-color: var(--clr-light);
+  padding: 80px 20px;
+  font-family: sans-serif;
+  color: #333333;
+}
+
+.story-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.story-header {
+  max-width: 800px;
+  margin: 0 auto 60px auto;
+  border-bottom: 1px solid #E0E0E0;
+  padding-bottom: 40px;
+}
+
+/* Removed specific h2/p styles to inherit from global defaults */
+
+.story-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 60px;
+  align-items: flex-start;
+}
+
+.story-bio {
+  flex: 1;
+  min-width: 300px;
+  max-width: 500px;
+}
+
+.bio-image-container {
+  width: 100%;
+  height: auto;
+  margin-bottom: 30px;
+  border: 1px solid #E0E0E0;
+}
+
+.bio-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.story-bio h3 {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 5px 0;
+  color: var(--clr-primary);
+  font-family: sans-serif;
+}
+
+.bio-title {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #5F6D7B;
+  margin-bottom: 25px;
+  font-weight: 600;
+}
+
+.bio-text {
+  font-size: 16px;
+  color: #555555;
+  line-height: 1.6;
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.bio-stats {
+  display: flex;
+  gap: 40px;
+  border-top: 1px solid #E0E0E0;
+  padding-top: 25px;
+}
+
+.stat-value {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--clr-primary);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #5F6D7B;
+  letter-spacing: 1px;
+  margin-top: 5px;
+}
+
+.story-foundation {
+  flex: 1;
+  min-width: 300px;
+}
+
+.foundation-card {
+  background-color: #F9F9F9;
+  border: 1px solid #E0E0E0;
+  padding: 40px;
+  border-radius: 4px;
+}
+
+.foundation-card h4 {
+  font-size: 20px;
+  color: var(--clr-primary);
+  margin: 0 0 10px 0;
+  text-align: left;
+}
+
+.foundation-text {
+  font-size: 14px;
+  color: #555555;
+  line-height: 1.5;
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.foundation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.foundation-item {
+  padding: 20px;
+  background: #FFFFFF;
+  border: 1px solid #EEEEEE;
+}
+
+.item-white {
+  border-left: 4px solid var(--clr-primary);
+}
+
+.item-gray {
+  border-left: 4px solid #5F6D7B;
+}
+
+.item-dark {
+  border-left: 4px solid #333333;
+}
+
+.item-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #5F6D7B;
+  letter-spacing: 1px;
+  margin-bottom: 5px;
+}
+
+.item-value {
+  color: #333333;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.foundation-link {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.foundation-link a {
+  font-size: 12px;
+  color: var(--clr-primary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-decoration: none;
+  border-bottom: 1px solid var(--clr-primary);
+  padding-bottom: 2px;
+}
+
+.story-experience {
+  margin-top: 80px;
+  border-top: 1px solid #E0E0E0;
+  padding-top: 40px;
+}
+
+.experience-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #5F6D7B;
+  margin-bottom: 20px;
+}
+
+.experience-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 40px;
+  color: #555555;
+  font-size: 14px;
+}
+
+.experience-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  background-color: #FFFFFF;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border: 1px solid #EEEEEE;
+  height: 100%;
+}
+
+.experience-item p {
+  font-size: 15px;
+  color: #555555;
+  line-height: 1.4;
+  margin: 0;
+  text-align: center;
+}
+
+.venture-logo {
+  height: 50px;
+  width: auto;
+  margin-bottom: 5px;
+  /* Background removed as the card is now white */
+  padding: 5px;
+}
+
+.experience-item strong {
+  color: var(--clr-primary);
+  display: block;
+  margin-bottom: 2px;
+  font-size: 15px;
+}
+
+.venture-lesson {
+  font-size: 10px;
+  color: var(--clr-primary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
+  margin-top: auto;
+  /* Push to bottom if height is fixed, or just margin */
+  padding-top: 8px;
+}
