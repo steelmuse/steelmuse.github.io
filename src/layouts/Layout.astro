@@ -1,0 +1,238 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Steel Muse",
+  description = "Transform ideas into patent-protected ventures with Steel Muse. We provide fractional innovation leadership and expert IP strategy with a 90%+ patent grant rate.",
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
+const schema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Steel Muse",
+  url: "https://www.steelmuse.com",
+  logo: "https://www.steelmuse.com/images/smlogo.png",
+  description:
+    "With Steel Muse, you engage innovation roles on a fractional basis. Each role provides a distinct tier of service, delivering world-class results.",
+});
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Michroma&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    <script type="application/ld+json" set:html={schema} />
+  </head>
+  <body class="relative bg-background text-primary font-sans antialiased">
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:z-[101] focus:bg-white focus:text-black focus:p-4 focus:outline-none"
+    >
+      Skip to content
+    </a>
+    <!-- Top Navigation: overlay, fixed at top -->
+    <nav id="topnav">
+      <div id="nav-container">
+        <div class="nav-left">
+          <a id="nav-home" href="/">steel muse</a>
+        </div>
+        <ul id="nav-links" class="nav-right">
+          <li><a href="/#what-we-do">What We Do</a></li>
+          <li><a href="/#services">Our Services</a></li>
+          <li><a href="/#garage">The Garage</a></li>
+          <li><a href="/#story">Our Story</a></li>
+          <li><a href="/#contact">Contact Us</a></li>
+        </ul>
+        <button
+          id="menu-button"
+          type="button"
+          aria-label="Toggle navigation menu"
+          aria-expanded="false"
+          aria-controls="nav-links"
+        >
+          &#9776;
+        </button>
+      </div>
+    </nav>
+    <main id="main-content" class="max-w-content mx-auto px-4">
+      <!-- Page Content Slot -->
+      <slot />
+    </main>
+    <footer id="footer">
+      <div id="footer-container">
+        <div id="footer-left">
+          <div id="footer-logo">steel muse</div>
+        </div>
+        <div id="footer-right">
+          <div id="footer-tagline">Start Something Serious</div>
+          <div id="footer-links">
+            <a href="/privacy">Privacy Policy</a>
+            <a href="/terms">Terms & Conditions</a>
+          </div>
+          <div id="footer-copy">© Steel Muse Inc 2025</div>
+        </div>
+      </div>
+    </footer>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const menuButton = document.getElementById("menu-button");
+        const navLinks = document.getElementById("nav-links");
+        const topnav = document.getElementById("topnav");
+        const home = document.getElementById("home");
+        const scrollCue = document.getElementById("scroll");
+
+        // ——— Mobile menu toggle ———
+        if (menuButton && navLinks) {
+          menuButton.addEventListener("click", () => {
+            const isOpen = navLinks.classList.toggle("show");
+            menuButton.setAttribute("aria-expanded", isOpen.toString());
+          });
+          navLinks.querySelectorAll("a").forEach((link) => {
+            link.addEventListener("click", () => {
+              navLinks.classList.remove("show");
+              menuButton.setAttribute("aria-expanded", "false");
+            });
+          });
+        } else {
+          console.error("Menu elements not found!");
+        }
+
+        // ——— Scroll cue behavior ———
+        if (scrollCue) {
+          scrollCue.addEventListener("click", () => {
+            const sections = document.querySelectorAll("section");
+            const scrollY = window.scrollY;
+            const viewportHeight = window.innerHeight;
+            let nextSection = null;
+
+            sections.forEach((section) => {
+              const rect = section.getBoundingClientRect();
+              if (rect.top + scrollY > scrollY + 10) {
+                // next section is below current scroll
+                if (!nextSection || section.offsetTop < nextSection.offsetTop) {
+                  nextSection = section;
+                }
+              }
+            });
+
+            if (nextSection) {
+              nextSection.scrollIntoView({ behavior: "smooth" });
+            }
+          });
+        }
+
+        // ——— Navbar show/hide & hero fade ———
+        if (home && topnav) {
+          const fadeDistance = window.innerHeight * 0.6;
+
+          function updateNavAndHero() {
+            const scrollY = window.scrollY;
+            const opacity = Math.max(0, 1 - scrollY / fadeDistance);
+            home.style.opacity = opacity.toFixed(2);
+
+            if (scrollY > fadeDistance * 0.9) {
+              topnav.classList.add("visible");
+            } else {
+              topnav.classList.remove("visible");
+            }
+          }
+
+          window.addEventListener("scroll", updateNavAndHero);
+          updateNavAndHero();
+        } else if (topnav) {
+          topnav.classList.add("visible");
+        } else {
+          console.error("Topnav element not found!");
+        }
+
+        // ——— Global fade-in on scroll using IntersectionObserver ———
+        const fadeSections = document.querySelectorAll(".fade-section");
+        if (fadeSections.length > 0) {
+          const observer = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  entry.target.classList.add("visible");
+                } else {
+                  entry.target.classList.remove("visible");
+                }
+              });
+            },
+            {
+              threshold: 0.1, // trigger fade when 5% visible
+            },
+          );
+
+          fadeSections.forEach((section) => observer.observe(section));
+        } else {
+          console.warn("No .fade-section elements found.");
+        }
+
+        // ——— Scrollspy: highlight active nav link using scroll position ———
+        const navLinksList = document.querySelectorAll("#nav-links a");
+        const sections = Array.from(navLinksList)
+          .map((link) => {
+            const id = link.getAttribute("href").split("#")[1];
+            return document.getElementById(id);
+          })
+          .filter(Boolean);
+
+        function updateScrollSpy() {
+          const scrollY = window.scrollY;
+          const viewportHeight = window.innerHeight;
+          let currentSectionId = null;
+
+          sections.forEach((section) => {
+            const rect = section.getBoundingClientRect();
+            const sectionTop = rect.top + scrollY;
+            const sectionBottom = sectionTop + section.offsetHeight;
+
+            if (
+              scrollY + viewportHeight * 0.4 >= sectionTop &&
+              scrollY + viewportHeight * 0.4 < sectionBottom
+            ) {
+              currentSectionId = section.id;
+            }
+          });
+
+          navLinksList.forEach((link) => {
+            const id = link.getAttribute("href").split("#")[1];
+            link.classList.toggle("active", id === currentSectionId);
+          });
+        }
+
+        window.addEventListener("scroll", updateScrollSpy);
+        updateScrollSpy();
+      });
+    </script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HKWJXB4SPX"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-HKWJXB4SPX");
+    </script>
+  </body>
+</html>

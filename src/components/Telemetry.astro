@@ -1,0 +1,126 @@
+---
+
+---
+
+<div class="telemetry-container">
+    <div class="telemetry-module">
+        <div class="telemetry-grid">
+            <div class="telemetry-item">
+                <div class="label">Operational Efficacy</div>
+                <div class="metric">90%+</div>
+                <div class="subtext">Patent Grant Rate</div>
+            </div>
+
+            <div class="telemetry-item">
+                <div class="label">Founder Experience</div>
+                <div class="metric">150+</div>
+                <div class="subtext">Patents Awarded</div>
+            </div>
+
+            <div class="telemetry-item">
+                <div class="label">Operational Volume</div>
+                <div class="metric">250+</div>
+                <div class="subtext">Prosecution Cycles</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .telemetry-container {
+        width: 100%;
+        box-sizing: border-box;
+        margin-top: 3rem; /* Increased spacing */
+        padding: 0 20px;
+    }
+
+    .telemetry-module {
+        /* Wrapper is now just for layout constraint if needed, or we can reset it */
+        max-width: 1000px; /* Increased width for 3 cards */
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .telemetry-grid {
+        display: flex;
+        justify-content: center;
+        align-items: stretch; /* Make cards same height */
+        gap: 20px; /* Space between cards */
+        width: 100%;
+    }
+
+    .telemetry-item {
+        flex: 1;
+        text-align: center;
+        padding: 30px 20px;
+        background-color: rgba(0, 0, 0, 0.3); /* Dark Overlay per card */
+        border: 1px solid #5f6d7b;
+        border-radius: 12px; /* Slightly larger radius for card look */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition:
+            transform 0.3s ease,
+            box-shadow 0.3s ease;
+        backdrop-filter: blur(
+            4px
+        ); /* Optional: adds to the "glass" feel if supported */
+    }
+
+    /* Hover effect for the cards themselves */
+    .telemetry-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        border-color: #aabbaa;
+    }
+
+    .label {
+        font-family: sans-serif;
+        font-size: 11px;
+        text-transform: uppercase;
+        color: #aabbaa;
+        letter-spacing: 1.5px;
+        margin-bottom: 12px;
+    }
+
+    .metric {
+        font-family: sans-serif;
+        font-size: 48px; /* Slightly larger */
+        font-weight: 700;
+        color: #ffffff;
+        line-height: 1;
+        margin-bottom: 4px;
+    }
+
+    .subtext {
+        font-family: sans-serif;
+        font-size: 13px;
+        color: #e0e0e0;
+        margin-top: 8px;
+    }
+
+    /* Responsive Behavior */
+    @media (max-width: 768px) {
+        .telemetry-container {
+            margin-top: 2rem;
+            padding: 0 15px;
+        }
+
+        .telemetry-grid {
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .telemetry-item {
+            width: 100%;
+            max-width: 100%; /* Allow full width */
+            padding: 20px 15px; /* Reduced padding */
+        }
+
+        .metric {
+            font-size: 36px; /* Smaller metric on mobile */
+        }
+    }
+</style>

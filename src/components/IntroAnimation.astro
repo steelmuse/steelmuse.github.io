@@ -1,0 +1,155 @@
+---
+
+---
+
+<div
+    id="intro-overlay"
+    class="fixed inset-0 z-[9999] bg-black flex items-center justify-center overflow-hidden"
+>
+    <div
+        id="intro-content"
+        class="relative flex flex-col items-center justify-center w-full h-full opacity-0"
+    >
+        <!-- Spark / Center Pulse -->
+        <div
+            id="intro-spark"
+            class="absolute w-2 h-2 bg-white rounded-full shadow-[0_0_20px_10px_rgba(255,255,255,0.8)] opacity-0"
+        >
+        </div>
+    </div>
+
+    <!-- Skip Button -->
+    <button
+        id="skip-animation"
+        class="absolute bottom-8 right-8 text-white/50 hover:text-white text-sm uppercase tracking-widest transition-colors z-50 opacity-0"
+    >
+        Skip Intro
+    </button>
+</div>
+
+<script>
+    import { gsap } from "gsap";
+
+    const overlay = document.getElementById("intro-overlay");
+    const content = document.getElementById("intro-content");
+    const spark = document.getElementById("intro-spark");
+    const skipBtn = document.getElementById("skip-animation");
+
+    // Target the REAL homepage elements
+    const realLogo = document.getElementById("hero-logo");
+    const realTagline = document.getElementById("tagline");
+
+    // Check for reduced motion preference
+    const prefersReducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    // Check for URL parameter override
+    const urlParams = new URLSearchParams(window.location.search);
+    const forceIntro = urlParams.get("intro") === "true";
+
+    const hasVisited = localStorage.getItem("steelmuse_visited");
+
+    // Function to hide overlay and unlock scroll
+    const finishAnimation = () => {
+        // Ensure overlay is gone
+        if (overlay) {
+            overlay.style.display = "none";
+            overlay.setAttribute("aria-hidden", "true");
+        }
+
+        // Ensure real elements are fully visible and clean
+        if (realLogo) {
+            gsap.set(realLogo, { clearProps: "all" });
+        }
+        if (realTagline) {
+            gsap.set(realTagline, { clearProps: "all" });
+        }
+
+        document.body.style.overflow = "auto"; // Unlock scroll
+        localStorage.setItem("steelmuse_visited", "true");
+    };
+
+    const shouldSkip = (hasVisited && !forceIntro) || prefersReducedMotion;
+
+    if (shouldSkip) {
+        // If visited or reduced motion, hide immediately
+        if (overlay) {
+            overlay.style.display = "none";
+            overlay.setAttribute("aria-hidden", "true");
+        }
+    } else {
+        // Lock scroll during animation
+        document.body.style.overflow = "hidden";
+        if (overlay) overlay.setAttribute("aria-hidden", "false");
+
+        // Make content visible for animation start
+        if (content) content.style.opacity = "1";
+        if (skipBtn) skipBtn.style.opacity = "1";
+
+        // Prepare real elements (hide them initially)
+        // We use opacity 0 and a slight scale down to simulate the "forming" effect
+        if (realLogo) gsap.set(realLogo, { opacity: 0, scale: 0.8 });
+        if (realTagline) gsap.set(realTagline, { opacity: 0 });
+
+        const tl = gsap.timeline({
+            onComplete: finishAnimation,
+        });
+
+        // 1. Blank Black Screen (Initial state)
+        // 2. Spark Appears & Immediately Expands
+        tl.to(spark, { opacity: 1, duration: 0.1, ease: "power2.out" })
+
+            // 3. Spark "Uncoils" (Simulated by expanding scale)
+            // AND Overlay Background fades to transparent to reveal the Green Page
+            .to(
+                spark,
+                { scale: 300, opacity: 0, duration: 1.2, ease: "power4.in" },
+                ">", // Start immediately after spark appears
+            )
+            .to(
+                overlay,
+                {
+                    backgroundColor: "transparent",
+                    duration: 1.0,
+                    ease: "power2.inOut",
+                },
+                "<+=0.2", // Start slightly after the spark starts expanding
+            )
+
+            // 4. Real Logo Appears (Simulating the structure forming)
+            .to(
+                realLogo,
+                {
+                    opacity: 1,
+                    scale: 1,
+                    duration: 1.2,
+                    ease: "elastic.out(1, 0.7)",
+                },
+                "-=0.8", // Overlap with the end of the spark/fade
+            )
+
+            // 5. Real Tagline Appears
+            .to(
+                realTagline,
+                {
+                    opacity: 1,
+                    duration: 0.8,
+                    ease: "power2.out",
+                },
+                "-=0.6",
+            )
+
+            // Hold for a moment to let the user see the result before "finishing" (removing overlay)
+            // Note: The overlay is transparent now, so removing it just removes the DOM element.
+            .to({}, { duration: 0.5 });
+
+        // Skip button logic
+        if (skipBtn) {
+            skipBtn.addEventListener("click", () => {
+                tl.progress(1); // Jump to end
+                finishAnimation();
+            });
+        }
+    }
+</script>
