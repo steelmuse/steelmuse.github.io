@@ -37,56 +37,71 @@ for row in rows:
     # The structure we saw: 1.<span class="s1">Number</span>Title
     # Note: textutil output might vary slightly but we saw <span class="s1">
     
-    if 'class="s1"' not in row:
-        continue
-    
-    # Extract ID, Number, Title
-    # Pattern: Digit dot, span, number, close span, title
-    # We use non-greedy matches
-    # Regex breakdown:
-    # (\d+)\.  -> Group 1: Index (e.g. 1.)
-    # <span[^>]*>(.*?)</span> -> Group 2: Number (inside span)
-    # (.*?)</p> -> Group 3: Title (until end of paragraph)
-    
+    # Match the main patent line: 1.<span...>Number</span>Title...
     m_main = re.search(r'(\d+)\.<span[^>]*>(.*?)</span>(.*?)</p>', row, re.DOTALL)
     if not m_main:
         continue
     
-    index = m_main.group(1).strip()
-    number = m_main.group(2).strip()
-    title = m_main.group(3).strip()
+    p_index = m_main.group(1).strip()
+    p_number_raw = m_main.group(2).strip()
+    # Clean number (remove HTML tags if any)
+    p_number = re.sub(r'<[^>]+>', '', p_number_raw).strip()
     
-    # Clean title: remove newlines/extra spaces
-    title = re.sub(r'\s+', ' ', title).strip()
+    p_title_raw = m_main.group(3).strip()
+    p_title = re.sub(r'\s+', ' ', p_title_raw).strip()
     
-    # Smart Sentence Case:
-    # 1. If title is ALL CAPS, convert to sentence case (capitalize first, lower rest).
-    # 2. If title is Mixed Case, preserve it (it might contain correct acronyms).
-    if title and title.isupper():
-        title = title.capitalize()
-
-    
-    # Extract Country and Date
+    # Extract Country and Date from subsequent paragraph(s) in the row
     # Pattern: <p class="p2">US - 10.03.2011</p>
-    # We look for [A-Z]{2} - [Digit/Dot]
-    m_data = re.search(r'<p[^>]*>([A-Z]{2})\s+-\s+(\d{2}\.\d{2}\.\d{4})</p>', row)
-    country = ""
-    date = ""
-    if m_data:
-        country = m_data.group(1)
-        date = m_data.group(2)
+    m_meta = re.search(r'<p[^>]*>([A-Z]{2})\s+-\s+(\d{2}\.\d{2}\.\d{4})</p>', row)
+    p_country = ""
+    p_date = ""
+    if m_meta:
+        p_country = m_meta.group(1).strip()
+        p_date = m_meta.group(2).strip()
+
+    # --- TITLE CORRECTION ---
+    TITLE_OVERRIDES = {
+        '223540': 'Systems of computerized agents and user-directed semantic networking',
+        '227140': 'System and method for performing a semantic operation on a digital social network',
+        '248313': 'Preference guided data exploration and semantic processing',
+        '227201': 'Methods and device for providing information of interest to one or more users',
+        '227139': 'System and method for using knowledge representation to provide information based on environmental input',
+        '223541': 'Systems and methods for analyzing and synthesizing complex knowledge representations'
+    }
     
+    if p_number in TITLE_OVERRIDES:
+        p_title = TITLE_OVERRIDES[p_number]
+    else:
+        # Smart Sentence Case:
+        # If ALL CAPS, capitalize. Using a strict check to avoid messing up mixed case.
+        # Remove non-alpha chars to check "isupper" purely on letters.
+        letters = re.sub(r'[^a-zA-Z]', '', p_title)
+        if letters and letters.isupper():
+            p_title = p_title.capitalize()
+
+    # --- LINK GENERATION ---
+    # Google Patents: https://patents.google.com/patent/{Country}{CleanNumber}
+    # Clean number: remove non-alphanumeric (like slashes in WO/...)
+    clean_number = re.sub(r'[^A-Za-z0-9]', '', p_number)
     
-    # Construct WIPO link
-    # Using a search query for the patent number is robust
-    link = f"https://patentscope.wipo.int/search/en/result.jsf?queryString={number}"
-    
+    # Ensure country is valid (2 chars). If missing, we can't link effectively.
+    if p_country:
+        # Check if number already starts with country (e.g. WO/...)
+        # We ignore case for check, assuming country is usually uppercase
+        if clean_number.upper().startswith(p_country.upper()):
+            link = f"https://patents.google.com/patent/{clean_number}"
+        else:
+            link = f"https://patents.google.com/patent/{p_country}{clean_number}"
+    else:
+        # Fallback to WIPO search if no country
+        link = f"https://patentscope.wipo.int/search/en/result.jsf?queryString={p_number}"
+
     patents.append({
-        'index': index,
-        'number': number,
-        'title': title,
-        'country': country,
-        'date': date,
+        'index': p_index,
+        'number': p_number,
+        'title': p_title,
+        'country': p_country,
+        'date': p_date,
         'link': link
     })
 
