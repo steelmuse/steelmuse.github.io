@@ -1,0 +1,335 @@
+---
+import Layout from "../layouts/Layout.astro";
+import patentsData from "../data/patents.json";
+
+interface Patent {
+    index: string;
+    number: string;
+    title: string;
+    country: string;
+    date: string;
+    link?: string;
+}
+
+const patents: Patent[] = patentsData;
+
+// Format current date for "Effective as of"
+const effectiveDate = new Date().toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+});
+---
+
+<Layout title="Patents | Steel Muse" noindex={true}>
+    <section id="patents-page">
+        <div class="patents-content">
+            <a href="/#story" class="patents-back-link">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    ><path d="M19 12H5"></path><path d="M12 19l-7-7 7-7"
+                    ></path></svg
+                >
+                Back to Our Story
+            </a>
+
+            <div class="patents-header">
+                <p class="patents-meta">As of {effectiveDate}</p>
+
+                <h1 class="patents-title">Issued Patents</h1>
+
+                <p class="patents-intro">
+                    Our Founder, Peter Sweeney, is a named inventor on over 160
+                    patents worldwide, focusing on semantic computing and
+                    knowledge representation. His innovations bridge semantic
+                    frameworks with AI, applying synthesized knowledge
+                    representations to problems in information retrieval,
+                    machine learning, and large language models. These patents
+                    cover a range of applications, including search,
+                    advertising, logistics, and social media.
+                </p>
+            </div>
+
+            <!-- Sort and Filter Controls -->
+            <div class="controls-bar">
+                <div class="control-group">
+                    <label for="sort-select">Sort by</label>
+                    <select id="sort-select">
+                        <option value="date-desc">Date (Newest)</option>
+                        <option value="date-asc">Date (Oldest)</option>
+                        <option value="title-asc">Title (A-Z)</option>
+                        <option value="title-desc">Title (Z-A)</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="filter-select">Jurisdiction</label>
+                    <select id="filter-select">
+                        <option value="all">All Jurisdictions</option>
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+            </div>
+
+            <div class="patent-list" id="patent-list">
+                {
+                    patents.map((patent) => {
+                        // Create a sortable date string YYYYMMDD from DD.MM.YYYY
+                        const dateParts = patent.date.split(".");
+                        const isoDate =
+                            dateParts.length === 3
+                                ? `${dateParts[2]}${dateParts[1]}${dateParts[0]}`
+                                : "00000000";
+
+                        return (
+                            <article
+                                class="patent-item"
+                                data-title={patent.title}
+                                data-date={isoDate}
+                                data-country={patent.country}
+                            >
+                                <div class="patent-row">
+                                    <span class="patent-index">
+                                        {patent.index}
+                                    </span>
+                                    <div class="patent-details">
+                                        <a
+                                            href={patent.link}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            class="patent-link"
+                                        >
+                                            <h2 class="patent-name">
+                                                {patent.title}{" "}
+                                                <span style="font-size: 0.8em; opacity: 0.7;">
+                                                    ↗
+                                                </span>
+                                            </h2>
+                                        </a>
+                                        <div class="patent-meta-row">
+                                            <span class="patent-number">
+                                                {patent.number}
+                                            </span>
+                                            {(patent.country ||
+                                                patent.date) && (
+                                                <span class="separator">•</span>
+                                            )}
+                                            <div class="patent-info-group">
+                                                {patent.country && (
+                                                    <span
+                                                        class="patent-country"
+                                                        title="Country code"
+                                                    >
+                                                        {patent.country}
+                                                    </span>
+                                                )}
+                                                {patent.date && (
+                                                    <span
+                                                        class="patent-date"
+                                                        title="Issue Date"
+                                                    >
+                                                        {patent.date}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        );
+                    })
+                }
+            </div>
+
+            <div class="patents-footer">
+                <a href="/#story" class="patents-back-link">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        ><path d="M19 12H5"></path><path d="M12 19l-7-7 7-7"
+                        ></path></svg
+                    >
+                    Back to Our Story
+                </a>
+            </div>
+        </div>
+    </section>
+</Layout>
+
+<script>
+    // Client-side logic for sorting and filtering
+    document.addEventListener("DOMContentLoaded", () => {
+        const list = document.getElementById("patent-list");
+        const sortSelect = document.getElementById(
+            "sort-select",
+        ) as HTMLSelectElement;
+        const filterSelect = document.getElementById(
+            "filter-select",
+        ) as HTMLSelectElement;
+
+        if (!list || !sortSelect || !filterSelect) return;
+
+        const items = Array.from(
+            list.querySelectorAll(".patent-item"),
+        ) as HTMLElement[];
+
+        // 1. Populate Jurisdiction Filter
+        const countries = new Set<string>();
+        items.forEach((item) => {
+            const c = item.dataset.country;
+            if (c) countries.add(c);
+        });
+
+        const sortedCountries = Array.from(countries).sort();
+        sortedCountries.forEach((code) => {
+            const opt = document.createElement("option");
+            opt.value = code;
+            opt.textContent = code;
+            filterSelect.appendChild(opt);
+        });
+
+        // 2. Main Render Function
+        function updateList() {
+            const sortValue = sortSelect.value;
+            const filterValue = filterSelect.value;
+
+            // Filter
+            items.forEach((item) => {
+                const itemCountry = item.dataset.country;
+                const matchesFilter =
+                    filterValue === "all" || itemCountry === filterValue;
+                item.style.display = matchesFilter ? "" : "none";
+            });
+
+            // Sort (only visible items matters for visual order, but we sort all for simplicity in DOM)
+            const sortedItems = items.sort((a, b) => {
+                let valA, valB;
+                let comparison = 0;
+
+                if (sortValue.includes("date")) {
+                    // Date desc (newest first) is default for date
+                    valA = a.dataset.date || "";
+                    valB = b.dataset.date || "";
+                    comparison = valA.localeCompare(valB);
+                    // If date-desc, reverse
+                    if (sortValue === "date-desc") comparison *= -1;
+                } else {
+                    // Title
+                    valA = (a.dataset.title || "").toLowerCase();
+                    valB = (b.dataset.title || "").toLowerCase();
+                    comparison = valA.localeCompare(valB);
+                    // If title-desc, reverse
+                    if (sortValue === "title-desc") comparison *= -1;
+                }
+                return comparison;
+            });
+
+            // Re-append in new order
+            sortedItems.forEach((item) => list?.appendChild(item));
+        }
+
+        // Listeners
+        sortSelect.addEventListener("change", updateList);
+        filterSelect.addEventListener("change", updateList);
+
+        // Initial sort (match default: date-desc)
+        updateList();
+    });
+</script>
+
+<style>
+    /* Minimal local overrides if needed */
+    .separator {
+        color: #cbd5e1;
+    }
+    .patent-info-group {
+        display: flex;
+        gap: 1rem;
+    }
+
+    /* Controls Bar */
+    .controls-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .control-group {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .control-group label {
+        font-family: "Bai Jamjuree", sans-serif;
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: var(--clr-primary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .control-group select {
+        padding: 0.4rem 2rem 0.4rem 0.8rem; /* Extra right padding for arrow */
+        font-family: "Lato", sans-serif;
+        font-size: 0.95rem;
+        color: var(--clr-primary);
+        background-color: transparent;
+        border: 1px solid #e2e8f0; /* Light border */
+        border-radius: 4px;
+        cursor: pointer;
+        appearance: none; /* Remove default arrow */
+        background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23274e13%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2082.2c3.6-3.6%205.4-7.8%205.4-12.8%200-5-1.8-9.3-5.4-12.9z%22%2F%3E%3C%2Fsvg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.7rem top 50%;
+        background-size: 0.65rem auto;
+        transition:
+            border-color 0.2s,
+            box-shadow 0.2s;
+    }
+
+    .control-group select:hover {
+        border-color: var(--clr-accent);
+    }
+
+    .control-group select:focus {
+        outline: none;
+        border-color: var(--clr-accent);
+        box-shadow: 0 0 0 2px rgba(70, 130, 180, 0.2);
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 600px) {
+        .controls-bar {
+            flex-direction: column;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+    }
+
+    /* Enforce left alignment specifically for this page's items */
+    :global(#patents-page) .patent-item,
+    :global(#patents-page) .patent-details,
+    :global(#patents-page) .patent-name,
+    :global(#patents-page) .patent-meta-row {
+        text-align: left !important;
+        justify-content: flex-start !important;
+    }
+</style>

@@ -54,7 +54,7 @@
           thought leadership content that resonates with investors, partners,
           and the market.
         </dd>
-        <dt>
+        <dt class="popular-service">
           <div class="role-icon-container">
             <img
               src="/images/balance.svg"
@@ -64,7 +64,7 @@
           </div>
           <div class="role-title">Innovation Analyst</div>
         </dt>
-        <dd>
+        <dd class="popular-service">
           Works closely with patent agents and legal teams to support the patent
           application process: meticulously analyzing patent claims, examiner
           objections, and prior art to prepare robust arguments and secure
@@ -124,3 +124,57 @@
     </div>
   </div>
 </section>
+
+<style>
+  .popular-service {
+    position: relative;
+    border-left: 4px solid var(--clr-orange);
+    padding: 1rem;
+    margin-left: -1rem; /* Offset padding */
+    margin-right: -1rem;
+    border-radius: 0 0.5rem 0.5rem 0;
+  }
+
+  dt.popular-service {
+    margin-top: 3rem;
+    border-radius: 0.5rem 0.5rem 0 0;
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+    overflow: visible !important;
+  }
+
+  dd.popular-service {
+    margin-top: 0;
+    padding-top: 0.5rem;
+    border-radius: 0 0 0.5rem 0.5rem;
+    margin-left: -1rem; /* Reset margin for dd */
+  }
+
+  dt.popular-service::after {
+    content: "Most Popular";
+    position: absolute;
+    top: -12px;
+    right: 1rem;
+    background-color: var(--clr-orange);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  @media (max-width: 768px) {
+    .popular-service {
+      margin-left: -0.5rem;
+      margin-right: -0.5rem;
+    }
+
+    dd.popular-service {
+      margin-left: -0.5rem;
+    }
+  }
+</style>

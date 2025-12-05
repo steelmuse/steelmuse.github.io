@@ -4,11 +4,13 @@ import "../styles/global.css";
 interface Props {
   title?: string;
   description?: string;
+  noindex?: boolean;
 }
 
 const {
   title = "Steel Muse",
   description = "Transform ideas into patent-protected ventures with Steel Muse. We provide fractional innovation leadership and expert IP strategy with a 90%+ patent grant rate.",
+  noindex = false,
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
@@ -37,6 +39,7 @@ const schema = JSON.stringify({
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={canonicalURL} />
     <script type="application/ld+json" set:html={schema} />
   </head>

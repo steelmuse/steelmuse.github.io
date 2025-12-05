@@ -21,4 +21,8 @@ pnpm-debug.log*
 .DS_Store
 
 # jetbrains setting folder
+# jetbrains setting folder
 .idea/
+
+# Private resources
+Resources/
