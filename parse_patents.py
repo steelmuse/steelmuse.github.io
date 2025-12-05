@@ -1,63 +1,129 @@
-
 import re
 import os
 import json
+import ssl
+import urllib.request
+import xml.etree.ElementTree as ET
+from datetime import datetime
 
-import subprocess
-
-DOCX_FILE = 'Resources/Peter Sweeney Patents.docx'
-HTML_FILE = 'Resources/patents.html'
+RSS_URL = "https://patentscope.wipo.int/search/en/6f0ed051-6416-4af0-a6cb-79cd7d8b07b2/rss.xml"
+RSS_FILE = 'Resources/patents.xml'
 JSON_FILE = 'src/data/patents.json'
+DOCX_FILE = 'Resources/Peter Sweeney Patents.docx' # Keep for reference
 
 # Ensure output directory exists
 os.makedirs(os.path.dirname(JSON_FILE), exist_ok=True)
+os.makedirs(os.path.dirname(RSS_FILE), exist_ok=True)
 
-# Convert DOCX to HTML using textutil (macOS) to ensure fresh data
-if os.path.exists(DOCX_FILE):
-    try:
-        subprocess.run(['textutil', '-convert', 'html', DOCX_FILE, '-output', HTML_FILE], check=True)
-        print(f"Converted {DOCX_FILE} to {HTML_FILE}")
-    except subprocess.CalledProcessError as e:
-        print(f"Warning: Failed to convert docx: {e}")
-        # Continue if HTML exists
+# 1. Fetch RSS Feed
+print(f"Downloading RSS feed from {RSS_URL}...")
+try:
+    # Use unverified context to avoid SSL certificate issues
+    context = ssl._create_unverified_context()
+    with urllib.request.urlopen(RSS_URL, context=context) as response, open(RSS_FILE, 'wb') as out_file:
+        data = response.read()
+        out_file.write(data)
+    print("Download complete.")
+except Exception as e:
+    print(f"Error downloading RSS feed: {e}")
+    # If download fails, we might still want to try parsing the existing file if it exists
+    if not os.path.exists(RSS_FILE):
+        print("No local RSS file available. Exiting.")
+        exit(1)
+    print("Using existing local RSS file.")
 
-if not os.path.exists(HTML_FILE):
-    print(f"Error: {HTML_FILE} not found")
+print(f"Parsing RSS: {RSS_FILE}")
+
+try:
+    tree = ET.parse(RSS_FILE)
+    root = tree.getroot()
+except ET.ParseError as e:
+    print(f"Error parsing XML: {e}")
     exit(1)
 
-with open(HTML_FILE, 'r', encoding='utf-8') as f:
-    content = f.read()
+# Namespaces in RSS usually: <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">
+namespaces = {'dc': 'http://purl.org/dc/elements/1.1/'}
 
 patents = []
-# Split by rows
-rows = content.split('<tr>')
-
-for row in rows:
-    # Skip if no patent number span class found (roughly)
-    # The structure we saw: 1.<span class="s1">Number</span>Title
-    # Note: textutil output might vary slightly but we saw <span class="s1">
+# RSS 2.0 structure: <rss><channel><item>...
+channel = root.find('channel')
+if channel is None:
+    print("Error: No channel found in RSS")
+    exit(1)
     
-    # Match the main patent line: 1.<span...>Number</span>Title...
-    m_main = re.search(r'(\d+)\.<span[^>]*>(.*?)</span>(.*?)</p>', row, re.DOTALL)
-    if not m_main:
+items = channel.findall('item')
+
+idx = 1
+for item in items:
+    p = {}
+    
+    # Title
+    title_elem = item.find('title')
+    title = title_elem.text if title_elem is not None else ""
+    title = title.strip() if title else ""
+    # Clean title
+    title = re.sub(r'\s+', ' ', title).strip()
+    
+    # Date
+    pub_date_elem = item.find('pubDate')
+    pub_date_str = pub_date_elem.text if pub_date_elem is not None else ""
+    p_date = ""
+    if pub_date_str:
+        try:
+            # Parse: Thu, 10 Mar 2011 09:00:00 GMT
+            # We strip GMT just in case '%Z' is tricky across platforms without strict timezone libs
+            clean_date_str = pub_date_str.replace(" GMT", "").strip()
+            dt = datetime.strptime(clean_date_str, "%a, %d %b %Y %H:%M:%S")
+            # Format: DD.MM.YYYY
+            p_date = dt.strftime("%d.%m.%Y")
+        except ValueError:
+            # Fallback or try with %Z if system supports
+            try:
+                dt = datetime.strptime(pub_date_str, "%a, %d %b %Y %H:%M:%S %Z")
+                p_date = dt.strftime("%d.%m.%Y")
+            except:
+                pass
+
+    # Identifier / Number / Country
+    # <dc:identifier>US12345</dc:identifier>
+    # There can be multiple.
+    ids = item.findall('dc:identifier', namespaces)
+    if not ids:
+        continue
+        
+    id_texts = []
+    for x in ids:
+        if x.text:
+            id_texts.append(x.text.strip())
+            
+    if not id_texts:
         continue
     
-    p_index = m_main.group(1).strip()
-    p_number_raw = m_main.group(2).strip()
-    # Clean number (remove HTML tags if any)
-    p_number = re.sub(r'<[^>]+>', '', p_number_raw).strip()
+    # Strategy: Look for WO/, US20..., or take the last one.
+    vocab_id = id_texts[-1] # Default to last
     
-    p_title_raw = m_main.group(3).strip()
-    p_title = re.sub(r'\s+', ' ', p_title_raw).strip()
+    # Iterate to find better candidate
+    # Priority: starts with WO/ -> High
+    # Priority: starts with US20 (Publication) -> High
+    for i in id_texts:
+        if i.startswith("WO/"):
+            vocab_id = i
+            break
+        if i.startswith("US20") and len(i) > 10:
+             vocab_id = i
+             # Keep looking if we find a WO later? Unlikely for same item.
+             
+    # Extract Country Code (First 2 chars)
+    country = vocab_id[:2].upper()
     
-    # Extract Country and Date from subsequent paragraph(s) in the row
-    # Pattern: <p class="p2">US - 10.03.2011</p>
-    m_meta = re.search(r'<p[^>]*>([A-Z]{2})\s+-\s+(\d{2}\.\d{2}\.\d{4})</p>', row)
-    p_country = ""
-    p_date = ""
-    if m_meta:
-        p_country = m_meta.group(1).strip()
-        p_date = m_meta.group(2).strip()
+    # Extract Number
+    number = vocab_id
+    if country == "WO":
+        number = vocab_id # Keep WO/YYYY/NNNN
+    else:
+        # Check if number starts with country code (e.g. US2011...)
+        if number.upper().startswith(country):
+            number = number[len(country):]
 
     # --- TITLE CORRECTION ---
     TITLE_OVERRIDES = {
@@ -69,44 +135,40 @@ for row in rows:
         '223541': 'Systems and methods for analyzing and synthesizing complex knowledge representations'
     }
     
-    if p_number in TITLE_OVERRIDES:
-        p_title = TITLE_OVERRIDES[p_number]
+    if number in TITLE_OVERRIDES:
+        title = TITLE_OVERRIDES[number]
     else:
-        # Smart Sentence Case:
-        # If ALL CAPS, capitalize. Using a strict check to avoid messing up mixed case.
-        # Remove non-alpha chars to check "isupper" purely on letters.
-        letters = re.sub(r'[^a-zA-Z]', '', p_title)
+        # Smart Sentence Case logic
+        letters = re.sub(r'[^a-zA-Z]', '', title)
         if letters and letters.isupper():
-            p_title = p_title.capitalize()
+            title = title.capitalize()
 
-    # --- LINK GENERATION ---
-    # Google Patents: https://patents.google.com/patent/{Country}{CleanNumber}
-    # Clean number: remove non-alphanumeric (like slashes in WO/...)
-    clean_number = re.sub(r'[^A-Za-z0-9]', '', p_number)
+    # --- LINK EXTRACTION ---
+    # Use the link provided in the RSS feed as requested
+    link_elem = item.find('link')
+    link = link_elem.text.strip() if link_elem is not None and link_elem.text else ""
     
-    # Ensure country is valid (2 chars). If missing, we can't link effectively.
-    if p_country:
-        # Check if number already starts with country (e.g. WO/...)
-        # We ignore case for check, assuming country is usually uppercase
-        if clean_number.upper().startswith(p_country.upper()):
-            link = f"https://patents.google.com/patent/{clean_number}"
-        else:
-            link = f"https://patents.google.com/patent/{p_country}{clean_number}"
-    else:
-        # Fallback to WIPO search if no country
-        link = f"https://patentscope.wipo.int/search/en/result.jsf?queryString={p_number}"
+    # Fallback only if missing (shouldn't happen per user)
+    if not link:
+         clean_number = re.sub(r'[^A-Za-z0-9]', '', number)
+         if country:
+             if clean_number.upper().startswith(country):
+                link = f"https://patents.google.com/patent/{clean_number}"
+             else:
+                 link = f"https://patents.google.com/patent/{country}{clean_number}"
+         else:
+             link = f"https://patentscope.wipo.int/search/en/result.jsf?queryString={number}"
 
-    patents.append({
-        'index': p_index,
-        'number': p_number,
-        'title': p_title,
-        'country': p_country,
-        'date': p_date,
-        'link': link
-    })
-
+    p['index'] = str(idx)
+    p['number'] = number
+    p['title'] = title
+    p['country'] = country
+    p['date'] = p_date
+    p['link'] = link
+    
+    patents.append(p)
+    idx += 1
 
 print(f"Parsed {len(patents)} patents")
 with open(JSON_FILE, 'w', encoding='utf-8') as f:
     json.dump(patents, f, indent=2)
-

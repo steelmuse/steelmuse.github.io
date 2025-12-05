@@ -76,6 +76,11 @@ const effectiveDate = new Date().toLocaleDateString("en-US", {
                         <!-- Populated by JS -->
                     </select>
                 </div>
+                <div class="control-group ml-auto">
+                    <span id="patent-count-display" class="patent-count"
+                        >Loading...</span
+                    >
+                </div>
             </div>
 
             <div class="patent-list" id="patent-list">
@@ -96,9 +101,6 @@ const effectiveDate = new Date().toLocaleDateString("en-US", {
                                 data-country={patent.country}
                             >
                                 <div class="patent-row">
-                                    <span class="patent-index">
-                                        {patent.index}
-                                    </span>
                                     <div class="patent-details">
                                         <a
                                             href={patent.link}
@@ -180,8 +182,9 @@ const effectiveDate = new Date().toLocaleDateString("en-US", {
         const filterSelect = document.getElementById(
             "filter-select",
         ) as HTMLSelectElement;
+        const countDisplay = document.getElementById("patent-count-display");
 
-        if (!list || !sortSelect || !filterSelect) return;
+        if (!list || !sortSelect || !filterSelect || !countDisplay) return;
 
         const items = Array.from(
             list.querySelectorAll(".patent-item"),
@@ -206,6 +209,7 @@ const effectiveDate = new Date().toLocaleDateString("en-US", {
         function updateList() {
             const sortValue = sortSelect.value;
             const filterValue = filterSelect.value;
+            let visibleCount = 0;
 
             // Filter
             items.forEach((item) => {
@@ -213,7 +217,11 @@ const effectiveDate = new Date().toLocaleDateString("en-US", {
                 const matchesFilter =
                     filterValue === "all" || itemCountry === filterValue;
                 item.style.display = matchesFilter ? "" : "none";
+                if (matchesFilter) visibleCount++;
             });
+
+            // Update count display
+            countDisplay!.textContent = `${visibleCount} Patent${visibleCount !== 1 ? "s" : ""}`;
 
             // Sort (only visible items matters for visual order, but we sort all for simplicity in DOM)
             const sortedItems = items.sort((a, b) => {
@@ -269,12 +277,24 @@ const effectiveDate = new Date().toLocaleDateString("en-US", {
         margin-bottom: 2rem;
         padding-bottom: 1.5rem;
         border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        align-items: center; /* Vertically align items */
     }
 
     .control-group {
         display: flex;
         align-items: center;
         gap: 0.75rem;
+    }
+
+    .ml-auto {
+        margin-left: auto;
+    }
+
+    .patent-count {
+        font-family: "Bai Jamjuree", sans-serif;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--clr-primary);
     }
 
     .control-group label {
@@ -321,6 +341,10 @@ const effectiveDate = new Date().toLocaleDateString("en-US", {
             flex-direction: column;
             gap: 1rem;
             align-items: flex-start;
+        }
+
+        .ml-auto {
+            margin-left: 0; /* Reset margin on mobile */
         }
     }
 
