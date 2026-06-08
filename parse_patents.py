@@ -10,6 +10,18 @@ RSS_URL = "https://patentscope.wipo.int/search/en/6f0ed051-6416-4af0-a6cb-79cd7d
 RSS_FILE = 'Resources/patents.xml'
 JSON_FILE = 'src/data/patents.json'
 DOCX_FILE = 'Resources/Peter Sweeney Patents.docx' # Keep for reference
+REQUEST_HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/125.0.0.0 Safari/537.36"
+    ),
+    "Accept": "application/rss+xml,application/xml,text/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Referer": "https://patentscope.wipo.int/",
+    "Cache-Control": "no-cache",
+    "Pragma": "no-cache",
+}
 
 # Ensure output directory exists
 os.makedirs(os.path.dirname(JSON_FILE), exist_ok=True)
@@ -20,7 +32,8 @@ print(f"Downloading RSS feed from {RSS_URL}...")
 try:
     # Use unverified context to avoid SSL certificate issues
     context = ssl._create_unverified_context()
-    with urllib.request.urlopen(RSS_URL, context=context) as response, open(RSS_FILE, 'wb') as out_file:
+    request = urllib.request.Request(RSS_URL, headers=REQUEST_HEADERS)
+    with urllib.request.urlopen(request, context=context) as response, open(RSS_FILE, 'wb') as out_file:
         data = response.read()
         out_file.write(data)
     print("Download complete.")
@@ -29,6 +42,7 @@ except Exception as e:
     # If download fails, we might still want to try parsing the existing file if it exists
     if not os.path.exists(RSS_FILE):
         print("No local RSS file available. Exiting.")
+        print("Hint: WIPO may be blocking automated requests. A browser session or alternate source may be required.")
         exit(1)
     print("Using existing local RSS file.")
 
