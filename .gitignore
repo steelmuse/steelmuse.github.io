@@ -26,3 +26,6 @@ pnpm-debug.log*
 
 # Private resources
 Resources/
+
+# Private component
+src/components/Clients.astro

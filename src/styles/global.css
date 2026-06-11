@@ -172,9 +172,9 @@ h4 {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: url("/images/glyph.jpg") center center / cover no-repeat;
-  background-position: center 20%;
-  opacity: 0.15;
+  background: url("/images/SM_schematic.png") center center / contain no-repeat;
+  background-position: center center;
+  opacity: 0.32;
   pointer-events: none;
   z-index: 0;
 }
@@ -185,24 +185,29 @@ h4 {
 }
 
 #hero-logo {
-  max-width: 240px;
+  width: min(42vw, 420px);
   display: block;
   margin: 0;
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.45));
 }
 
 #tagline {
-  font-size: 3rem;
+  font-family: Lato, sans-serif;
+  font-size: clamp(3.25rem, 4.9vw, 5rem);
   font-style: italic;
-  font-weight: 700;
-  margin-top: 0.5rem;
+  font-weight: 900;
+  margin-top: 0.35rem;
   color: var(--clr-light);
   text-align: center;
-  line-height: 1.2;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-shadow: 0 6px 16px rgba(0, 0, 0, 0.55);
+  white-space: nowrap;
 }
 
 @media (max-width: 1024px) {
   #tagline {
-    font-size: 2.5rem;
+    font-size: clamp(2.75rem, 6vw, 4rem);
   }
 }
 
@@ -215,14 +220,19 @@ h4 {
     padding-bottom: 60px;
   }
 
+  #hero-logo {
+    width: min(72vw, 340px);
+  }
+
   #tagline {
-    font-size: 2rem;
+    font-size: clamp(2.25rem, 9vw, 3.25rem);
+    white-space: normal;
   }
 }
 
 @media (max-width: 480px) {
   #tagline {
-    font-size: 1.5rem;
+    font-size: clamp(1.85rem, 10vw, 2.5rem);
   }
 }
 
@@ -273,8 +283,11 @@ h4 {
 ----------------------------------------*/
 #what-we-do {
   position: relative;
-  background: url('/images/sketch.jpg') center center / cover no-repeat;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)),
+    url('/images/sketch.jpg') center center / cover no-repeat;
   background-attachment: fixed;
+  filter: brightness(1.03) saturate(0.9);
   color: var(--clr-primary);
 }
 
@@ -282,13 +295,24 @@ h4 {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.34);
+  backdrop-filter: blur(1.1px);
   z-index: 0;
 }
 
 #what-we-do>* {
   position: relative;
   z-index: 1;
+}
+
+#what-we-do a {
+  color: var(--clr-accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+#what-we-do a:hover {
+  text-decoration: underline;
 }
 
 #what-we-do .flowchart {
@@ -345,9 +369,12 @@ h4 {
   #services Section
 ----------------------------------------*/
 #services {
-  background: url('/images/blueprint.jpg') center center / cover no-repeat;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.56), rgba(255, 255, 255, 0.56)),
+    url('/images/blueprint.jpg') center center / cover no-repeat;
   color: var(--clr-primary);
   background-attachment: fixed;
+  filter: brightness(1.022) saturate(0.91);
   position: relative;
   z-index: 0;
 }
@@ -359,7 +386,8 @@ h4 {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 255, 255, 0.4);
+  background-color: rgba(255, 255, 255, 0.31);
+  backdrop-filter: blur(1.1px);
   z-index: 1;
 }
 
@@ -429,8 +457,11 @@ h4 {
 ----------------------------------------*/
 #garage {
   color: var(--clr-primary);
-  background: url('/images/bench.jpg') center center / cover no-repeat;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.56), rgba(255, 255, 255, 0.56)),
+    url('/images/bench.jpg') center center / cover no-repeat;
   background-attachment: fixed;
+  filter: brightness(1.022) saturate(0.91);
   position: relative;
   z-index: 0;
 }
@@ -442,7 +473,8 @@ h4 {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 255, 255, 0.4);
+  background-color: rgba(255, 255, 255, 0.31);
+  backdrop-filter: blur(1.1px);
   z-index: 1;
 }
 
@@ -536,8 +568,11 @@ details h4 {
 ----------------------------------------*/
 #story {
   color: var(--clr-primary);
-  background: url('/images/assembly.jpg') center center / cover no-repeat;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.56), rgba(255, 255, 255, 0.56)),
+    url('/images/assembly.jpg') center center / cover no-repeat;
   background-attachment: fixed;
+  filter: brightness(1.022) saturate(0.91);
   position: relative;
   z-index: 0;
 }
@@ -549,7 +584,8 @@ details h4 {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 255, 255, 0.4);
+  background-color: rgba(255, 255, 255, 0.31);
+  backdrop-filter: blur(1.1px);
   z-index: 1;
 }
 
@@ -775,8 +811,11 @@ details h4 {
   flex-direction: column;
   align-items: center;
   padding: 4rem 1rem;
-  background: url('/images/meeting.jpg') center center / cover no-repeat;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.56), rgba(255, 255, 255, 0.56)),
+    url('/images/meeting.jpg') center center / cover no-repeat;
   background-attachment: fixed;
+  filter: brightness(1.022) saturate(0.91);
   position: relative;
   z-index: 0;
 }
@@ -788,7 +827,8 @@ details h4 {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 255, 255, 0.4);
+  background-color: rgba(255, 255, 255, 0.31);
+  backdrop-filter: blur(1.1px);
   z-index: 1;
 }
 
@@ -1449,11 +1489,50 @@ h2 {
   text-align: left;
 }
 
+.garage-card--platform {
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--clr-accent) 72%, #0f2134) 0%, color-mix(in srgb, var(--clr-primary) 65%, #10293b) 100%);
+  border-color: color-mix(in srgb, var(--clr-accent) 55%, white);
+  box-shadow: 0 12px 32px rgba(24, 56, 86, 0.22);
+}
+
+.garage-card--platform .status-badge {
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.garage-card--platform .card-title {
+  color: #ffffff;
+}
+
+.garage-card--platform .card-body {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.garage-card--platform .card-footer {
+  border-top-color: rgba(255, 255, 255, 0.24);
+}
+
+.garage-card--platform .btn-method {
+  border-color: rgba(255, 255, 255, 0.42);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.garage-card--platform .btn-agent {
+  background: #ffffff;
+  color: color-mix(in srgb, var(--clr-accent) 65%, var(--clr-primary));
+}
+
 /* Hover Effect */
 .garage-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 25px rgba(47, 94, 57, 0.4);
   border-color: #99AA99;
+}
+
+.garage-card--platform:hover {
+  box-shadow: 0 14px 34px rgba(24, 56, 86, 0.3);
+  border-color: color-mix(in srgb, var(--clr-accent) 70%, white);
 }
 
 /* Header Layout */

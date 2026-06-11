@@ -241,6 +241,14 @@
   },
   {
     "index": "31",
+    "number": "20130007124",
+    "title": "System and method for performing a semantic operation on a digital social network",
+    "country": "US",
+    "date": "03.01.2013",
+    "link": "https://patentscope.wipo.int/search/en/detail.jsf?docId=US76411215"
+  },
+  {
+    "index": "32",
     "number": "20240411796",
     "title": "Systems and methods for semantic concept definition and semantic concept relationship synthesis utilizing existing domain definitions",
     "country": "US",
@@ -248,20 +256,12 @@
     "link": "https://patentscope.wipo.int/search/en/detail.jsf?docId=US444090138"
   },
   {
-    "index": "32",
+    "index": "33",
     "number": "3186068",
     "title": "Methods and devices for customizing knowledge representation systems",
     "country": "CA",
     "date": "13.03.2014",
     "link": "https://patentscope.wipo.int/search/en/detail.jsf?docId=CA393084750"
-  },
-  {
-    "index": "33",
-    "number": "20130007124",
-    "title": "System and method for performing a semantic operation on a digital social network",
-    "country": "US",
-    "date": "03.01.2013",
-    "link": "https://patentscope.wipo.int/search/en/detail.jsf?docId=US76411215"
   },
   {
     "index": "34",
@@ -1097,14 +1097,6 @@
   },
   {
     "index": "138",
-    "number": "3194185",
-    "title": "System and method for processing changes to itineraries",
-    "country": "CA",
-    "date": "28.09.2023",
-    "link": "https://patentscope.wipo.int/search/en/detail.jsf?docId=CA409168471"
-  },
-  {
-    "index": "139",
     "number": "219705",
     "title": "System, method and computer program for creating and manipulating data structures using an interactive graphical interface",
     "country": "IL",
@@ -1112,7 +1104,7 @@
     "link": "https://patentscope.wipo.int/search/en/detail.jsf?docId=IL74427447"
   },
   {
-    "index": "140",
+    "index": "139",
     "number": "248314",
     "title": "System, method and computer program for creating and manipulating data structures using an interactive graphical interface",
     "country": "IL",
@@ -1120,7 +1112,7 @@
     "link": "https://patentscope.wipo.int/search/en/detail.jsf?docId=IL205125937"
   },
   {
-    "index": "141",
+    "index": "140",
     "number": "WO/2012/088590",
     "title": "System and method for using a knowledge representation to provide information based on environmental inputs",
     "country": "WO",
@@ -1128,12 +1120,20 @@
     "link": "https://patentscope.wipo.int/search/en/detail.jsf?docId=WO2012088590"
   },
   {
-    "index": "142",
+    "index": "141",
     "number": "WO/2011/057396",
     "title": "System, method and computer program for creating and manipulating data structures using an interactive graphical interface",
     "country": "WO",
     "date": "19.05.2011",
     "link": "https://patentscope.wipo.int/search/en/detail.jsf?docId=WO2011057396"
+  },
+  {
+    "index": "142",
+    "number": "3194185",
+    "title": "System and method for processing changes to itineraries",
+    "country": "CA",
+    "date": "28.09.2023",
+    "link": "https://patentscope.wipo.int/search/en/detail.jsf?docId=CA409168471"
   },
   {
     "index": "143",
