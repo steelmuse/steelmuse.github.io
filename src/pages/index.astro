@@ -1,20 +1,26 @@
 ---
+import "../styles/site.css";
 import Layout from "../layouts/Layout.astro";
-import IntroAnimation from "../components/IntroAnimation.astro";
 import Home from "../components/Home.astro";
 import WhatWeDo from "../components/WhatWeDo.astro";
-import Services from "../components/Services.astro";
 import Garage from "../components/Garage.astro";
+import Services from "../components/Services.astro";
 import Story from "../components/Story.astro";
 import CTA from "../components/CTA.astro";
+import { footerLinks, navLinks } from "../data/navigation";
 ---
 
-<Layout title="Steel Muse">
-    <IntroAnimation />
-    <Home />
-    <WhatWeDo />
-    <Garage />
-    <Services />
-    <Story />
-    <CTA />
+<Layout
+  title="Steel Muse"
+  bodyClass="site"
+  navHomeHref="/"
+  navLinks={navLinks}
+  footerLinks={footerLinks}
+>
+  <Home />
+  <WhatWeDo />
+  <Garage />
+  <Services />
+  <Story />
+  <CTA />
 </Layout>

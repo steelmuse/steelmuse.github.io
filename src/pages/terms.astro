@@ -1,8 +1,16 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Terms from '../components/Terms.astro';
+import "../styles/site.css";
+import Layout from "../layouts/Layout.astro";
+import Terms from "../components/Terms.astro";
+import { footerLinks, navLinks } from "../data/navigation";
 ---
 
-<Layout>
-    <Terms />
+<Layout
+  title="Terms & Conditions | Steel Muse"
+  bodyClass="site"
+  navHomeHref="/"
+  navLinks={navLinks}
+  footerLinks={footerLinks}
+>
+  <Terms />
 </Layout>

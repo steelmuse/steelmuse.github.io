@@ -1,10 +1,16 @@
 ---
+import "../styles/site.css";
 import Layout from "../layouts/Layout.astro";
+import { footerLinks, navLinks } from "../data/navigation";
 ---
 
 <Layout
     title="Page Not Found | Steel Muse"
     description="The page you are looking for does not exist."
+    bodyClass="site"
+    navHomeHref="/"
+    navLinks={navLinks}
+    footerLinks={footerLinks}
 >
     <section id="not-found">
         <h1 class="not-found-title">404</h1>
@@ -15,7 +21,7 @@ import Layout from "../layouts/Layout.astro";
         </p>
 
         <div class="not-found-actions">
-            <a href="/" class="btn-404 btn-404-primary"> Return Home </a>
+            <a href="/" class="btn-404 btn-404-primary"> Return to the Garage </a>
             <a href="/#services" class="btn-404 btn-404-outline">
                 Our Services
             </a>

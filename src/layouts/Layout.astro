@@ -5,12 +5,31 @@ interface Props {
   title?: string;
   description?: string;
   noindex?: boolean;
+  bodyClass?: string;
+  navHomeHref?: string;
+  navLabel?: string;
+  navLinks?: Array<{ href: string; label: string }>;
+  footerLinks?: Array<{ href: string; label: string }>;
 }
 
 const {
   title = "Steel Muse",
   description = "Transform ideas into patent-protected ventures with Steel Muse. We provide fractional innovation leadership and expert IP strategy with a 90%+ patent grant rate.",
   noindex = false,
+  bodyClass = "",
+  navHomeHref = "/",
+  navLabel = "steel muse",
+  navLinks = [
+    { href: "/#what-we-do", label: "What We Do" },
+    { href: "/#garage", label: "Technology" },
+    { href: "/#services", label: "Our Services" },
+    { href: "/#story", label: "Our Story" },
+    { href: "/#contact", label: "Contact Us" },
+  ],
+  footerLinks = [
+    { href: "/privacy", label: "Privacy Policy" },
+    { href: "/terms", label: "Terms & Conditions" },
+  ],
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
@@ -43,7 +62,7 @@ const schema = JSON.stringify({
     <link rel="canonical" href={canonicalURL} />
     <script type="application/ld+json" set:html={schema} />
   </head>
-  <body class="relative bg-background text-primary font-sans antialiased">
+  <body class={`relative bg-background text-primary font-sans antialiased ${bodyClass}`.trim()}>
     <a
       href="#main-content"
       class="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:z-[101] focus:bg-white focus:text-black focus:p-4 focus:outline-none"
@@ -54,14 +73,12 @@ const schema = JSON.stringify({
     <nav id="topnav">
       <div id="nav-container">
         <div class="nav-left">
-          <a id="nav-home" href="/">steel muse</a>
+          <a id="nav-home" href={navHomeHref}>{navLabel}</a>
         </div>
         <ul id="nav-links" class="nav-right">
-          <li><a href="/#what-we-do">What We Do</a></li>
-          <li><a href="/#garage">Technology</a></li>
-          <li><a href="/#services">Our Services</a></li>
-          <li><a href="/#story">Our Story</a></li>
-          <li><a href="/#contact">Contact Us</a></li>
+          {navLinks.map((link) => (
+            <li><a href={link.href}>{link.label}</a></li>
+          ))}
         </ul>
         <button
           id="menu-button"
@@ -84,10 +101,8 @@ const schema = JSON.stringify({
           <div id="footer-logo">steel muse</div>
         </div>
         <div id="footer-right">
-          <div id="footer-tagline">Start Something Serious</div>
           <div id="footer-links">
-            <a href="/privacy">Privacy Policy</a>
-            <a href="/terms">Terms & Conditions</a>
+            {footerLinks.map((link) => <a href={link.href}>{link.label}</a>)}
           </div>
           <div id="footer-copy">© Steel Muse Inc 2026</div>
         </div>

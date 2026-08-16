@@ -1,6 +1,9 @@
 ---
+import "../styles/site.css";
 import Layout from "../layouts/Layout.astro";
 import patentsData from "../data/patents.json";
+import patentsMeta from "../data/patents-meta.json";
+import { footerLinks, navLinks } from "../data/navigation";
 
 interface Patent {
     index: string;
@@ -13,15 +16,27 @@ interface Patent {
 
 const patents: Patent[] = patentsData;
 
-// Format current date for "Effective as of"
-const effectiveDate = new Date().toLocaleDateString("en-US", {
+const [updatedYear, updatedMonth, updatedDay] = patentsMeta.updatedOn
+    .split("-")
+    .map(Number);
+const effectiveDate = new Date(
+    Date.UTC(updatedYear, updatedMonth - 1, updatedDay),
+).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
+    timeZone: "UTC",
 });
 ---
 
-<Layout title="Patents | Steel Muse" noindex={true}>
+<Layout
+    title="Patents | Steel Muse"
+    noindex={true}
+    bodyClass="site"
+    navHomeHref="/"
+    navLinks={navLinks}
+    footerLinks={footerLinks}
+>
     <section id="patents-page">
         <div class="patents-content">
             <a href="/#story" class="patents-back-link">
@@ -47,12 +62,12 @@ const effectiveDate = new Date().toLocaleDateString("en-US", {
                 <h1 class="patents-title">Issued Patents</h1>
 
                 <p class="patents-intro">
-                    Our Founder, Peter Sweeney, is a named inventor on the following international patents, focusing on semantic computing and
-                    knowledge representation. His innovations bridge semantic
-                    frameworks with AI, applying synthesized knowledge
-                    representations to problems in information retrieval,
+                    Our Founder, Peter Sweeney, is a named inventor on the
+                    following international patents, focusing on generative AI, agents, and
+                    knowledge representation. His innovations bridge agent
+                    frameworks with symbolic AI, with applications in information retrieval,
                     machine learning, and large language models. These patents
-                    cover a range of applications, including search,
+                    cover a range of applications, including agents, search,
                     advertising, logistics, and social media.
                 </p>
             </div>
@@ -257,102 +272,3 @@ const effectiveDate = new Date().toLocaleDateString("en-US", {
         updateList();
     });
 </script>
-
-<style>
-    /* Minimal local overrides if needed */
-    .separator {
-        color: #cbd5e1;
-    }
-    .patent-info-group {
-        display: flex;
-        gap: 1rem;
-    }
-
-    /* Controls Bar */
-    .controls-bar {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 2rem;
-        margin-bottom: 2rem;
-        padding-bottom: 1.5rem;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        align-items: center; /* Vertically align items */
-    }
-
-    .control-group {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-    }
-
-    .ml-auto {
-        margin-left: auto;
-    }
-
-    .patent-count {
-        font-family: "Bai Jamjuree", sans-serif;
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: var(--clr-primary);
-    }
-
-    .control-group label {
-        font-family: "Bai Jamjuree", sans-serif;
-        font-weight: 600;
-        font-size: 0.9rem;
-        color: var(--clr-primary);
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-
-    .control-group select {
-        padding: 0.4rem 2rem 0.4rem 0.8rem; /* Extra right padding for arrow */
-        font-family: "Lato", sans-serif;
-        font-size: 0.95rem;
-        color: var(--clr-primary);
-        background-color: transparent;
-        border: 1px solid #e2e8f0; /* Light border */
-        border-radius: 4px;
-        cursor: pointer;
-        appearance: none; /* Remove default arrow */
-        background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23274e13%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2082.2c3.6-3.6%205.4-7.8%205.4-12.8%200-5-1.8-9.3-5.4-12.9z%22%2F%3E%3C%2Fsvg%3E");
-        background-repeat: no-repeat;
-        background-position: right 0.7rem top 50%;
-        background-size: 0.65rem auto;
-        transition:
-            border-color 0.2s,
-            box-shadow 0.2s;
-    }
-
-    .control-group select:hover {
-        border-color: var(--clr-accent);
-    }
-
-    .control-group select:focus {
-        outline: none;
-        border-color: var(--clr-accent);
-        box-shadow: 0 0 0 2px rgba(70, 130, 180, 0.2);
-    }
-
-    /* Mobile adjustments */
-    @media (max-width: 600px) {
-        .controls-bar {
-            flex-direction: column;
-            gap: 1rem;
-            align-items: flex-start;
-        }
-
-        .ml-auto {
-            margin-left: 0; /* Reset margin on mobile */
-        }
-    }
-
-    /* Enforce left alignment specifically for this page's items */
-    :global(#patents-page) .patent-item,
-    :global(#patents-page) .patent-details,
-    :global(#patents-page) .patent-name,
-    :global(#patents-page) .patent-meta-row {
-        text-align: left !important;
-        justify-content: flex-start !important;
-    }
-</style>

@@ -2,18 +2,19 @@
 import Telemetry from "./Telemetry.astro";
 ---
 
-<section id="story" class="fade-section">
-  <div class="story-container">
-    <div class="story-header">
+<section id="story" class="fade-section site-section site-section--story">
+  <div class="site-shell">
+    <div class="site-section-heading">
       <h2>Our Story</h2>
+    </div>
 
+    <div class="site-copy-grid">
       <p>
         Steel Muse is the result of 30 years of invention and entrepreneurship.
         We didn't learn innovation in a classroom. We learned it on the front
-        lines — founding companies, building technologies, and securing
+        lines - founding companies, building technologies, and securing
         intellectual property at an industrial scale.
       </p>
-
       <p>
         We know the friction that slows serious founders down. We built Steel
         Muse to solve it. We've distilled decades of executive leadership and
@@ -21,129 +22,85 @@ import Telemetry from "./Telemetry.astro";
       </p>
     </div>
 
-    <div class="story-content">
-      <div class="story-bio">
-        <div class="bio-image-container">
-          <img
-            src="/images/headshot.jpg"
-            alt="Peter Sweeney"
-            class="bio-image"
-          />
+    <div class="site-story-grid">
+      <article class="site-founder-panel">
+        <div class="site-founder-panel__image">
+          <img src="/images/headshot.png" alt="Peter Sweeney" class="bio-image" />
         </div>
-
+        <div class="site-founder-panel__meta">Founder / The Architect</div>
         <h3>Peter Sweeney</h3>
-        <div class="bio-title">The Architect</div>
-
-        <p class="bio-text">
+        <p>
           A seasoned entrepreneur and prolific inventor whose experience
           directly informs every system we build. Peter has served in executive
           roles (CEO, CTO, COO) across four ventures, leading teams from
           early-stage invention to institutional scale.
         </p>
-      </div>
+      </article>
 
-      <div class="story-foundation">
-        <div class="foundation-card">
-          <h4>Deep Technical Experience</h4>
-          <p class="foundation-text">
-            We speak the language of inventors because we are inventors. Our
-            background involves decades of hands-on technical development. This
-            allows us to rapidly deconstruct complex innovations and translate
-            them into robust asset strategies without the friction often found
-            between legal and engineering teams.
-          </p>
+      <article class="site-dossier-panel">
+        <div class="site-dossier-panel__header">
+          <span>Technical Dossier</span>
+          <a href="/patents">View Issued Patents</a>
+        </div>
+        <h3>Deep Technical Experience</h3>
+        <p>
+          We speak the language of inventors because we are inventors. Our
+          background involves decades of hands-on technical development. This
+          allows us to rapidly deconstruct complex innovations and translate
+          them into robust asset strategies without the friction often found
+          between legal and engineering teams.
+        </p>
 
-          <div class="foundation-list">
-            <div class="foundation-item item-white">
-              <div class="item-label">Systems Architecture</div>
-              <div class="item-value">Generative AI & Data Synthesis</div>
+        <div class="site-capability-list">
+          <div class="site-capability">
+            <div class="site-capability__label">Systems Architecture</div>
+            <div class="site-capability__value">Generative AI & Data Synthesis</div>
+          </div>
+          <div class="site-capability">
+            <div class="site-capability__label">Agent Systems</div>
+            <div class="site-capability__value">
+              Explanatory State Modeling & User-Directed Networking
             </div>
-
-            <div class="foundation-item item-gray">
-              <div class="item-label">Agent Systems</div>
-              <div class="item-value">
-                 Explanatory State Modeling & User-Directed Networking
-              </div>
-            </div>
-
-            <div class="foundation-item item-dark">
-              <div class="item-label">Knowledge Engineering</div>
-              <div class="item-value">
-                Kinematic Data Modeling & Semantic Representation
-              </div>
-            </div>
-
-            <div class="foundation-link">
-              <a href="/patents">View Issued Patents</a>
+          </div>
+          <div class="site-capability">
+            <div class="site-capability__label">Knowledge Engineering</div>
+            <div class="site-capability__value">
+              Kinematic Data Modeling & Semantic Representation
             </div>
           </div>
         </div>
-      </div>
+      </article>
     </div>
 
     <Telemetry />
 
-    <div class="story-experience">
-      <div class="experience-label">
-        Experience Distilled From Category-Defining Ventures
-      </div>
-
-      <div class="experience-grid">
-        <div class="experience-item">
-          <img
-            src="/images/indimensions-logo.png"
-            alt="InDIMENSIONS logo"
-            class="venture-logo"
-          />
-          <p>
-            <strong>InDIMENSIONS (1996-2001)</strong><br />
-            E-Business Infrastructure
-          </p>
-          <div class="venture-lesson">↳ Lesson: Infrastructure</div>
-        </div>
-
-        <div class="experience-item">
-          <img
-            src="/images/occ-logo.png"
-            alt="Official Community logo"
-            class="venture-logo"
-          />
-          <p>
-            <strong>Official Community (2001-2025)</strong><br />
-            Direct-to-Fan Scale
-          </p>
-          <div class="venture-lesson">↳ Lesson: Scale</div>
-        </div>
-
-        <div class="experience-item">
+    <div class="site-timeline">
+      <div class="site-timeline__label">Experience Distilled From Category-Defining Ventures</div>
+      <div class="site-timeline__grid">
+        <article class="site-timeline__item">
+          <img src="/images/indimensions-logo.png" alt="InDIMENSIONS logo" class="venture-logo" />
+          <p><strong>InDIMENSIONS (1996-2001)</strong><br />E-Business Infrastructure</p>
+          <div class="venture-lesson">Lesson: Infrastructure</div>
+        </article>
+        <article class="site-timeline__item">
+          <img src="/images/occ-logo.png" alt="Official Community logo" class="venture-logo" />
+          <p><strong>Official Community (2001-2025)</strong><br />Direct-to-Fan Scale</p>
+          <div class="venture-lesson">Lesson: Scale</div>
+        </article>
+        <article class="site-timeline__item">
           <a href="https://www.primal.com" target="_blank" rel="noopener">
-            <img
-              src="/images/primal-logo.png"
-              alt="Primal logo"
-              class="venture-logo"
-            />
+            <img src="/images/primal-logo.png" alt="Primal logo" class="venture-logo" />
           </a>
-          <p>
-            <strong>Primal (2004-Present)</strong><br />
-            Generative AI & Semantic Synthesis
-          </p>
-          <div class="venture-lesson">↳ Lesson: Invention</div>
-        </div>
-
-        <div class="experience-item">
+          <p><strong>Primal (2004-Present)</strong><br />Generative AI & Semantic Synthesis</p>
+          <div class="venture-lesson">Lesson: Invention</div>
+        </article>
+        <article class="site-timeline__item">
           <a href="/">
-            <img
-              src="/images/steelmuse-logo.png"
-              alt="Steel Muse logo"
-              class="venture-logo"
-            />
+            <img src="/images/steelmuse-logo.png" alt="Steel Muse logo" class="venture-logo" />
           </a>
-          <p>
-            <strong>Steel Muse (2018-Present)</strong><br />
-            A platform for institutional innovation.
-          </p>
-          <div class="venture-lesson">★ Innovation Architected</div>
-        </div>
+          <p><strong>Steel Muse (2018-Present)</strong><br />Institutional Innovation</p>
+          <div class="venture-lesson">Lesson: Commercialization</div>
+        </article>
       </div>
     </div>
   </div>

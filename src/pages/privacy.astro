@@ -1,8 +1,16 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Privacy from '../components/Privacy.astro';
+import "../styles/site.css";
+import Layout from "../layouts/Layout.astro";
+import Privacy from "../components/Privacy.astro";
+import { footerLinks, navLinks } from "../data/navigation";
 ---
 
-<Layout>
-    <Privacy />
+<Layout
+  title="Privacy Policy | Steel Muse"
+  bodyClass="site"
+  navHomeHref="/"
+  navLinks={navLinks}
+  footerLinks={footerLinks}
+>
+  <Privacy />
 </Layout>

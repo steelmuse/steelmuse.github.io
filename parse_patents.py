@@ -9,6 +9,7 @@ from datetime import datetime
 RSS_URL = "https://patentscope.wipo.int/search/en/6f0ed051-6416-4af0-a6cb-79cd7d8b07b2/rss.xml"
 RSS_FILE = 'Resources/patents.xml'
 JSON_FILE = 'src/data/patents.json'
+META_FILE = 'src/data/patents-meta.json'
 DOCX_FILE = 'Resources/Peter Sweeney Patents.docx' # Keep for reference
 REQUEST_HEADERS = {
     "User-Agent": (
@@ -186,3 +187,6 @@ for item in items:
 print(f"Parsed {len(patents)} patents")
 with open(JSON_FILE, 'w', encoding='utf-8') as f:
     json.dump(patents, f, indent=2)
+
+with open(META_FILE, 'w', encoding='utf-8') as f:
+    json.dump({"updatedOn": datetime.now().astimezone().date().isoformat()}, f, indent=2)
